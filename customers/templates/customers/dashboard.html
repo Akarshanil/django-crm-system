@@ -1,0 +1,152 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Dashboard - CRM System{% endblock %}
+
+{% block page_header %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Content Row -->
+<div class="row">
+    <!-- Total Customers Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Customers
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_customers }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Users Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Users
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_users }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Welcome
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user.get_full_name|default:user.username }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-smile fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Customers -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Customers</h6>
+                <a href="{% url 'customer_list' %}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_customers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Company</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in recent_customers %}
+                                <tr>
+                                    <td>{{ customer.get_full_name }}</td>
+                                    <td>{{ customer.email }}</td>
+                                    <td>{{ customer.phone|default:"N/A" }}</td>
+                                    <td>{{ customer.company|default:"N/A" }}</td>
+                                    <td>
+                                        <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted mb-0">No customers yet. <a href="{% url 'customer_add' %}">Add your first customer</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'customer_add' %}" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus"></i> Add Customer
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'bulk_upload' %}" class="btn btn-success btn-block">
+                            <i class="fas fa-upload"></i> Bulk Upload
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'export_pdf' %}" class="btn btn-danger btn-block">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'user_add' %}" class="btn btn-info btn-block">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}{{ user.get_full_name }} - CRM System{% endblock %}
+
+{% block page_header %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">User Details</h1>
+    <div>
+        <a href="{% url 'user_edit' user.pk %}" class="btn btn-warning btn-sm">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'user_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Profile Picture</h6>
+            </div>
+            <div class="card-body text-center">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="{{ user.get_full_name }}" 
+                         class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
+                {% else %}
+                    <div class="bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 200px; height: 200px;">
+                        <i class="fas fa-user fa-5x text-white"></i>
+                    </div>
+                {% endif %}
+                <h4 class="mb-0">{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted">@{{ user.username }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Status</h6>
+            </div>
+            <div class="card-body">
+                <p>
+                    {% if user.is_active %}
+                        <span class="badge badge-success">Active</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                    {% endif %}
+                </p>
+                <p>
+                    {% if user.is_superuser %}
+                        <span class="badge badge-primary">Superuser</span>
+                    {% endif %}
+                </p>
+                <p>
+                    {% if user.is_staff %}
+                        <span class="badge badge-info">Staff</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">User Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user text-primary"></i> Username:</strong></p>
+                        <p class="ml-4">{{ user.username }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-envelope text-primary"></i> Email:</strong></p>
+                        <p class="ml-4"><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-id-card text-primary"></i> First Name:</strong></p>
+                        <p class="ml-4">{{ user.first_name|default:"Not provided" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-id-card text-primary"></i> Last Name:</strong></p>
+                        <p class="ml-4">{{ user.last_name|default:"Not provided" }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-calendar text-primary"></i> Date Joined:</strong></p>
+                        <p class="ml-4">{{ user.date_joined|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-clock text-primary"></i> Last Login:</strong></p>
+                        <p class="ml-4">{{ user.last_login|date:"F d, Y H:i"|default:"Never" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Contact Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p><strong><i class="fas fa-phone text-primary"></i> Phone:</strong></p>
+                    <p class="ml-4">{{ profile.phone|default:"Not provided" }}</p>
+                </div>
+
+                <div class="mb-3">
+                    <p><strong><i class="fas fa-map-marker-alt text-primary"></i> Address:</strong></p>
+                    <p class="ml-4">{{ profile.address|default:"Not provided"|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Activity</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Customers Created:</strong> {{ user.customers_created.count }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

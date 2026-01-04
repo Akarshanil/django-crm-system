@@ -1,0 +1,126 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}{{ customer.get_full_name }} - CRM System{% endblock %}
+
+{% block page_header %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Customer Details</h1>
+    <div>
+        <a href="{% url 'customer_edit' customer.pk %}" class="btn btn-warning btn-sm">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'customer_delete' customer.pk %}" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        <a href="{% url 'customer_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Profile Picture</h6>
+            </div>
+            <div class="card-body text-center">
+                {% if customer.image %}
+                    <img src="{{ customer.image.url }}" alt="{{ customer.get_full_name }}" 
+                         class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
+                {% else %}
+                    <div class="bg-secondary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 200px; height: 200px;">
+                        <i class="fas fa-user fa-5x text-white"></i>
+                    </div>
+                {% endif %}
+                <h4 class="mb-0">{{ customer.get_full_name }}</h4>
+                <p class="text-muted">{{ customer.company|default:"No Company" }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Info</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Created:</strong><br>{{ customer.created_at|date:"F d, Y" }}</p>
+                <p><strong>Last Updated:</strong><br>{{ customer.updated_at|date:"F d, Y" }}</p>
+                <p><strong>Created By:</strong><br>{{ customer.created_by.get_full_name|default:customer.created_by.username }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Contact Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user text-primary"></i> First Name:</strong></p>
+                        <p class="ml-4">{{ customer.first_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user text-primary"></i> Last Name:</strong></p>
+                        <p class="ml-4">{{ customer.last_name }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-envelope text-primary"></i> Email:</strong></p>
+                        <p class="ml-4"><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-phone text-primary"></i> Phone:</strong></p>
+                        <p class="ml-4">{{ customer.phone|default:"Not provided" }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <p><strong><i class="fas fa-building text-primary"></i> Company:</strong></p>
+                    <p class="ml-4">{{ customer.company|default:"Not provided" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Address Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p><strong><i class="fas fa-map-marker-alt text-primary"></i> Address:</strong></p>
+                    <p class="ml-4">{{ customer.address|default:"Not provided"|linebreaks }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>City:</strong> {{ customer.city|default:"Not provided" }}</p>
+                        <p><strong>State:</strong> {{ customer.state|default:"Not provided" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Country:</strong> {{ customer.country|default:"Not provided" }}</p>
+                        <p><strong>Postal Code:</strong> {{ customer.postal_code|default:"Not provided" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if customer.notes %}
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
+            </div>
+            <div class="card-body">
+                <p>{{ customer.notes|linebreaks }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

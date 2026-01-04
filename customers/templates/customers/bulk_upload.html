@@ -1,0 +1,97 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Bulk Upload - CRM System{% endblock %}
+
+{% block page_header %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Bulk Upload Customers</h1>
+    <a href="{% url 'customer_list' %}" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Upload Excel File</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Instructions:</h6>
+                    <ol class="mb-0">
+                        <li>Download the sample Excel template below</li>
+                        <li>Fill in your customer data following the same format</li>
+                        <li>Upload the completed Excel file using the form below</li>
+                    </ol>
+                </div>
+
+                <div class="mb-4 text-center">
+                    <a href="{% url 'download_sample_excel' %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-download"></i> Download Sample Excel Template
+                    </a>
+                </div>
+
+                <hr>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.excel_file.id_for_label }}">Select Excel File</label>
+                        {{ form.excel_file }}
+                        {% if form.excel_file.errors %}
+                            <div class="text-danger">{{ form.excel_file.errors }}</div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Accepted formats: .xlsx, .xls
+                        </small>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>Excel File Format:</strong><br>
+                        The Excel file should have the following columns in order:
+                        <ul class="mb-0">
+                            <li>First Name</li>
+                            <li>Last Name</li>
+                            <li>Email</li>
+                            <li>Phone</li>
+                            <li>Address</li>
+                            <li>City</li>
+                            <li>State</li>
+                            <li>Country</li>
+                            <li>Postal Code</li>
+                            <li>Company</li>
+                            <li>Notes</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-upload"></i> Upload and Import Customers
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Tips for Successful Import</h6>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Make sure your Excel file has the column headers exactly as shown in the sample template</li>
+                    <li>Email addresses must be unique - duplicate emails will be skipped</li>
+                    <li>First Name, Last Name, and Email are required fields</li>
+                    <li>Phone numbers should be in international format (e.g., +1234567890)</li>
+                    <li>The first row should contain column headers</li>
+                    <li>Start your data from the second row</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
