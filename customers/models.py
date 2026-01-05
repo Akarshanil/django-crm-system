@@ -7,10 +7,13 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+    regex=r'^(\+91)?[6-9]\d{9}$',
+    message="Enter a valid Indian mobile number (10 digits, optional +91).")
+    phone = models.CharField(
+        validators=[phone_regex],
+        max_length=13,
+        blank=True
     )
-    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     address = models.TextField(blank=True)
     city = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)

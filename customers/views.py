@@ -17,6 +17,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 from datetime import datetime
+from openpyxl.styles import Font, PatternFill
 
 
 # Dashboard View
@@ -184,23 +185,49 @@ def download_sample_excel(request):
     ws.title = "Customers"
     
     # Headers
-    headers = ['First Name', 'Last Name', 'Email', 'Phone', 'Address', 
-               'City', 'State', 'Country', 'Postal Code', 'Company', 'Notes']
+    headers = [
+        'First Name', 'Last Name', 'Email', 'Phone', 'Address',
+        'City', 'State', 'Country', 'Postal Code', 'Company', 'Notes'
+    ]
     ws.append(headers)
-    
-    # Sample data
-    ws.append(['John', 'Doe', 'john@example.com', '+1234567890', '123 Main St', 
-               'New York', 'NY', 'USA', '10001', 'ABC Corp', 'Sample customer'])
-    
-    # Style headers
+
+    # ✅ 15 Sample customer records
+    sample_customers = [
+        ['John', 'Doe', 'john@example.com', '9876543210', '123 Main St', 'New York', 'NY', 'USA', '10001', 'ABC Corp', 'Regular customer'],
+        ['Jane', 'Smith', 'jane@example.com', '9876543211', '45 Park Ave', 'Los Angeles', 'CA', 'USA', '90001', 'XYZ Ltd', 'Premium customer'],
+        ['Robert', 'Brown', 'robert@example.com', '9876543212', '78 Elm St', 'Chicago', 'IL', 'USA', '60601', 'TechSoft', 'Follow up required'],
+        ['Emily', 'Clark', 'emily@example.com', '9876543213', '9 Pine Rd', 'Houston', 'TX', 'USA', '77001', 'CloudNet', 'New lead'],
+        ['Michael', 'Johnson', 'michael@example.com', '9876543214', '56 Oak St', 'Phoenix', 'AZ', 'USA', '85001', 'InnoWorks', 'Important client'],
+        ['Sophia', 'Williams', 'sophia@example.com', '9876543215', '89 Maple Dr', 'Dallas', 'TX', 'USA', '75201', 'BrightTech', 'High priority'],
+        ['David', 'Miller', 'david@example.com', '9876543216', '10 River Rd', 'San Jose', 'CA', 'USA', '95101', 'NextGen', 'Repeat customer'],
+        ['Olivia', 'Davis', 'olivia@example.com', '9876543217', '34 Lake View', 'Austin', 'TX', 'USA', '73301', 'SoftLabs', 'Corporate account'],
+        ['James', 'Wilson', 'james@example.com', '9876543218', '77 Hill St', 'Seattle', 'WA', 'USA', '98101', 'CodeBase', 'Requested demo'],
+        ['Ava', 'Moore', 'ava@example.com', '9876543219', '21 Sunset Blvd', 'Miami', 'FL', 'USA', '33101', 'MediaX', 'Seasonal client'],
+        ['Daniel', 'Taylor', 'daniel@example.com', '9876543220', '90 Cedar St', 'Denver', 'CO', 'USA', '80201', 'SkyTech', 'Cold lead'],
+        ['Mia', 'Anderson', 'mia@example.com', '9876543221', '63 Birch Rd', 'Boston', 'MA', 'USA', '02101', 'DataWave', 'Warm lead'],
+        ['Matthew', 'Thomas', 'matthew@example.com', '9876543222', '88 Broadway', 'Newark', 'NJ', 'USA', '07101', 'WebWorks', 'Contract pending'],
+        ['Isabella', 'Jackson', 'isabella@example.com', '9876543223', '12 Market St', 'San Diego', 'CA', 'USA', '92101', 'DesignPro', 'Design client'],
+        ['Ethan', 'White', 'ethan@example.com', '9876543224', '5 Cross Rd', 'Portland', 'OR', 'USA', '97201', 'AI Labs', 'Startup client'],
+    ]
+
+    # Add rows to sheet
+    for customer in sample_customers:
+        ws.append(customer)
+
+    # Style header row
     for cell in ws[1]:
-        cell.font = openpyxl.styles.Font(bold=True)
-        cell.fill = openpyxl.styles.PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
-    
+        cell.font = Font(bold=True)
+        cell.fill = PatternFill(
+            start_color="CCCCCC",
+            end_color="CCCCCC",
+            fill_type="solid"
+        )
+
+    # Write to memory
     output = BytesIO()
     wb.save(output)
     output.seek(0)
-    
+
     response = HttpResponse(
         output.read(),
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

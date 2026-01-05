@@ -24,7 +24,9 @@ class CustomerForm(forms.ModelForm):
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': '+1234567890'
+                'placeholder': '9876543210 or +919876543210',
+                'pattern': '(\+91)?[6-9][0-9]{9}',
+                'title': 'Enter valid Indian mobile number'
             }),
             'address': forms.Textarea(attrs={
                 'class': 'form-control',
